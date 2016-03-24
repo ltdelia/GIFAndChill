@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<!-- Style.CSS -->
+	<link rel="stylesheet" href="assets/css/style.css">
+
+	<!--Google Font Arvo Installed -->
+	<link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+
+	<!--jQuery-->
+	<script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+
+	<title>GIFs and Chill?</title>
+
+</head>
+<body>
+	<!-- User Input Boxes for Persons One and Two -->
+	<div>
+		<p>Person One</p>
+		<input id="you" type="text">
+	</div>
+
+	<div>
+		<p>Person Two</p>
+		<input id="them" type="text">
+	</div>
+
+	<button id="submit">Submit</button>
+
+	<!-- Display Sections -->
+
+	<div id="personOne"></div>
+	<div id="personTwo"></div>
+	<div id="percent"></div>
+	<div id="result"></div>
+
+<!-- JavaScript -->
+<script type=text/javascript>
+
+var you = "";
+var them = "";
+
+$("#submit").on('click', function doIt(){		
+	
+	// Grabbing the values of user input
+	you=$("#you").val().trim();
+	them=$("#them").val().trim();
+
+	// The AJAX calll for the Love Calculator API
+	var output = $.ajax({
+			// The URL to the Love Calculator API
+    		url: 'https://love-calculator.p.mashape.com/GetPercentage?fname='+you+'&sname='+them, 
+    		// The HTTP Method
+    		type: 'GET', 
+    		data: {}, 
+    		dataType: 'json',
+    	success: function(data) {
+
+        console.log(data);
+
+       	$('#personOne').html(data.fname);
+       	$('#personTwo').html(data.sname); 
+       	$('#percent').html(data.percentage);
+       	$('#result').html(data.result);  
+
+        },
+    	error: function(err) { alert(err); },
+    	beforeSend: function(xhr) {
+    	// Adding the Mashape Key to enable API
+    	xhr.setRequestHeader("X-Mashape-Authorization", "ceDOtO1OMAmsh6wrcV74AgQJF5Unp1RjG22jsnf3TthWQqm6jM"); 
+    	}
+	});
+  
+});
+
+</script>
+</body>
+</html>
