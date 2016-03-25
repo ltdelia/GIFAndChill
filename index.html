@@ -38,19 +38,25 @@
 	<div id="percent"></div>
 	<div id="result"></div>
 
+	<!-- GIF -->
+	<div id="express"></div>
+
 <!-- JavaScript -->
 <script type=text/javascript>
 
 var you = "";
 var them = "";
+var percentage = "";
+var result = "";
 
-$("#submit").on('click', function doIt(){		
+$("#submit").on('click', 
+	function doIt(){		
 	
 	// Grabbing the values of user input
 	you=$("#you").val().trim();
 	them=$("#them").val().trim();
 
-	// The AJAX calll for the Love Calculator API
+	// The AJAX call for the Love Calculator API
 	var output = $.ajax({
 			// The URL to the Love Calculator API
     		url: 'https://love-calculator.p.mashape.com/GetPercentage?fname='+you+'&sname='+them, 
@@ -60,22 +66,71 @@ $("#submit").on('click', function doIt(){
     		dataType: 'json',
     	success: function(data) {
 
-        console.log(data);
+        // console.log(data);
+        you = data.fname;
+        them = data.sname;
+        percentage = data.percentage;
+        result = data.result;
 
-       	$('#personOne').html(data.fname);
-       	$('#personTwo').html(data.sname); 
-       	$('#percent').html(data.percentage);
-       	$('#result').html(data.result);  
+        displayInfo();
 
+        gifUpload();
         },
     	error: function(err) { alert(err); },
     	beforeSend: function(xhr) {
     	// Adding the Mashape Key to enable API
     	xhr.setRequestHeader("X-Mashape-Authorization", "ceDOtO1OMAmsh6wrcV74AgQJF5Unp1RjG22jsnf3TthWQqm6jM"); 
     	}
-	});
-  
+
+	});  
 });
+
+function gifUpload(){
+	
+	var query = "";
+
+	if(percentage>=80 && percentage<=100){
+		query = "love"
+	}
+
+	if(percentage>=50 && percentage<=79){
+		query = "good+luck"
+	}
+
+	if(percentage>=30 && percentage<=49){
+		query = "eh"
+	}
+
+	if(percentage>=11 && percentage<=29){
+		query = "not+good"
+	}
+
+	if(percentage>=0 && percentage<=10){
+		query = "better+luck+next+time"
+	}
+	
+
+	var queryURL = "http://api.giphy.com/v1/gifs/search?q="+ query + "&api_key=dc6zaTOxFJmzC&limit=1&offset=0";
+
+	// AJAX call for the Giphy API
+	$.ajax({url: queryURL, method: 'GET'})
+
+		.done(function(response){
+
+			// console.log(response);
+
+			// console.log(response.data[0].images.downsized.url);
+			var gimme = response.data[0].images.downsized.url
+			$("#express").html("<img src=" + gimme + ">");
+		})
+}
+
+function displayInfo(){
+	    $('#personOne').html(you);
+       	$('#personTwo').html(them); 
+       	$('#percent').html(percentage);
+       	$('#result').html(result);  
+}
 
 </script>
 </body>
