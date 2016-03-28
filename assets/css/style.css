@@ -18,3 +18,7 @@ input{
 button{
 	margin-top:20px;
 }
+
+body{
+	font-family:Ubuntu;
+}

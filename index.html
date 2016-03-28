@@ -44,29 +44,26 @@
   				<div class="panel-body">
 					<!-- User Input Boxes for Persons One and Two -->
 					<div>
-						<p>Person One</p>
-						<input id="you" type="text">
+						<input id="you" type="text" placeholder=" Your Name">
 					</div>
 
 					<div>
-						<p>Person Two</p>
-						<input id="them" type="text">
+						<input id="them" type="text" placeholder=" Your Crush's Name">
 					</div>
 
 					<button class="btn btn-primary btn-lg" id="submit">Submit</button>
 				</div>
 			</div>
 		</div>
-
+	</div>
+	<div class="match">
 		<div class="col-md-6">
 			<div class="panel panel-default">
   			<div class="panel-heading">Is It A Match?</div>
   				<div class="panel-body">
 					<!-- Display Sections -->
-
-					<div id="personOne"></div>
-					<div id="personTwo"></div>
-					<div id="percent"></div>
+					<div id="percent"></div>					
+					<div id="people"></div>
 					<div id="result"></div>
 
 					<!-- GIF -->
@@ -86,16 +83,20 @@ var result = "";
 
 $(document).ready(function(){
 	$(".inputs").hide();
+	$(".match").hide();
 })
 
 $(".start").on('click', function(){
 	$(".landing").hide();
 	$(".inputs").show(); 
+
 })
 
 $("#submit").on('click',
 	function doIt(){		
 	
+	$(".match").show();
+
 	// Grabbing the values of user input
 	you=$("#you").val().trim();
 	them=$("#them").val().trim();
@@ -129,6 +130,9 @@ $("#submit").on('click',
 	});  
 });
 
+
+
+
 function gifUpload(){
 	
 	var query = "";
@@ -156,6 +160,8 @@ function gifUpload(){
 
 	var queryURL = "http://api.giphy.com/v1/gifs/search?q="+ query + "&api_key=dc6zaTOxFJmzC&limit=1&offset=0";
 
+	// var which = Math.floor(Math.random()*(1-1)) + 1;
+
 	// AJAX call for the Giphy API
 	$.ajax({url: queryURL, method: 'GET'})
 
@@ -170,9 +176,8 @@ function gifUpload(){
 }
 
 function displayInfo(){
-	    $('#personOne').html(you);
-       	$('#personTwo').html(them); 
-       	$('#percent').html(percentage);
+       	$('#percent').html("<h1>"+percentage + "% Match </h1>");
+	    $('#people').html(you+" & "+them);
        	$('#result').html(result);  
 }
 
