@@ -37,41 +37,52 @@
 		</div>
 	</div>
 
-	<div class="inputs">
+	<!-- Check Your Match -->
+	<div class="matchcheck">
 		<div class="col-md-6">
 			<div class="panel panel-default">
   			<div class="panel-heading">Check Your Match</div>
   				<div class="panel-body">
 					<!-- User Input Boxes for Persons One and Two -->
-					<div>
+					<div id="inputs">
 						<input id="you" type="text" placeholder=" Your Name">
-					</div>
-
-					<div>
 						<input id="them" type="text" placeholder=" Your Crush's Name">
+						<button class="btn btn-primary btn-lg" id="submit">Submit</button>
+					</div>
+					
+					<!-- Display Sections -->
+					<div id="outputs">
+						<div id="percent"></div>					
+						<div id="people"></div>
+						<div id="result"></div>
 					</div>
 
-					<button class="btn btn-primary btn-lg" id="submit">Submit</button>
+					<!-- Try Again? -->
+					<div id="tryagain">
+						<input id="you" type="text" placeholder=" Your Name">
+						<input id="them" type="text" placeholder=" Your Crush's Name">
+						<button class="btn btn-primary btn-lg" id="submit">Submit</button>
+					</div>
+
 				</div>
 			</div>
 		</div>
 	</div>
+
+	<!-- Is It A Match? -->
 	<div class="match">
 		<div class="col-md-6">
 			<div class="panel panel-default">
   			<div class="panel-heading">Is It A Match?</div>
   				<div class="panel-body">
-					<!-- Display Sections -->
-					<div id="percent"></div>					
-					<div id="people"></div>
-					<div id="result"></div>
-
 					<!-- GIF -->
 					<div id="express"></div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+
 </div>
 <!-- JavaScript -->
 <script type=text/javascript>
@@ -82,20 +93,31 @@ var percentage = "";
 var result = "";
 
 $(document).ready(function(){
-	$(".inputs").hide();
+	$(".matchcheck").hide();
 	$(".match").hide();
+	$("#tryagain").hide();
 })
 
 $(".start").on('click', function(){
 	$(".landing").hide();
-	$(".inputs").show(); 
+	$(".matchcheck").show(); 
 
 })
 
 $("#submit").on('click',
 	function doIt(){		
 	
+	// Hiding the initial inputs div
+	$("#inputs").hide();
+
+	// Showing the results of the "match"
+	$("#outputs").show();
+
+	// Display the div holding the GIF
 	$(".match").show();
+
+	// Display a "Try Again?" div
+	$("#tryagain").show();
 
 	// Grabbing the values of user input
 	you=$("#you").val().trim();
@@ -160,7 +182,7 @@ function gifUpload(){
 
 	var queryURL = "http://api.giphy.com/v1/gifs/search?q="+ query + "&api_key=dc6zaTOxFJmzC&limit=1&offset=0";
 
-	// var which = Math.floor(Math.random()*(1-1)) + 1;
+	// var which = Math.floor(Math.random()*(10-1)) + 1;
 
 	// AJAX call for the Giphy API
 	$.ajax({url: queryURL, method: 'GET'})
