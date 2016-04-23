@@ -17,192 +17,47 @@
 	<!--jQuery-->
 	<script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
 
-	<title>GIFs and Chill?</title>
+	<title>LoveReactor | Put your crush to the test.</title>
 
 </head>
 <body>
 <div class="container">
-	<!--Landing Page -->
-	<div class="landing">
-		<div class="col-lg-12">
-			<div class="jumbotron">
-				<div class="container">
-					<h1>LoveReactor</h1>
-					<p>Put your crush to the test.</p>
-					<p>
-						<a class="btn btn-primary btn-lg start">Get Started</a>
-					</p>
-				</div>
-			</div>
+	<div class="col-lg-6">
+		<!--Landing Page -->
+		<div id="landing">
+			<h1>LoveReactor</h1>
+			<p>Put your crush to the test. Love Calculator API from Mashape. GIFS from Giphy.</p>
 		</div>
-	</div>
 
-	<!-- Check Your Match -->
-	<div class="matchcheck">
-		<div class="col-md-6">
-			<div class="panel panel-default">
-  			<div class="panel-heading">Check Your Match</div>
-  				<div class="panel-body">
-					<!-- User Input Boxes for Persons One and Two -->
-					<div id="inputs">
-						<input id="you" type="text" placeholder=" Your Name">
-						<input id="them" type="text" placeholder=" Your Crush's Name">
-						<button class="btn btn-primary btn-lg" id="submit">Submit</button>
-					</div>
-					
-					<!-- Display Sections -->
-					<div id="outputs">
-						<div id="percent"></div>					
-						<div id="people"></div>
-						<div id="result"></div>
-					</div>
-
-					<!-- Try Again? -->
-					<div id="tryagain">
-						<input id="you" type="text" placeholder=" Your Name">
-						<input id="them" type="text" placeholder=" Your Crush's Name">
-						<button class="btn btn-primary btn-lg" id="submit">Submit</button>
-					</div>
-
-				</div>
-			</div>
+		<!-- Display Sections -->
+		<div id="outputs">
+			<div id="percent"></div>					
+			<div id="people"></div>
+			<div id="result"></div>
 		</div>
-	</div>
 
-	<!-- Is It A Match? -->
-	<div class="match">
-		<div class="col-md-6">
-			<div class="panel panel-default">
-  			<div class="panel-heading">Is It A Match?</div>
-  				<div class="panel-body">
-					<!-- GIF -->
-					<div id="express"></div>
-				</div>
-			</div>
+		<!-- Try Again? -->
+		<div id="tryagain">
+			<h2>Try Again?</h2>
 		</div>
-	</div>
 
+		<!-- User Input Boxes for Persons One and Two -->
+		<div id="inputs">
+			<input id="you" type="text" placeholder=" Your Name">
+			<input id="them" type="text" placeholder=" Your Crush's Name">
+			<button class="btn btn-primary btn-lg" id="submit">Submit</button>
+		</div>
+
+	</div>
+	
+	<div class="col-lg-6">
+		<!-- GIF -->
+		<div id="express"></div>
+	</div>
 
 </div>
 <!-- JavaScript -->
-<script type=text/javascript>
+<script type=text/javascript src="assets/javascript/app.js"></script>
 
-var you = "";
-var them = "";
-var percentage = "";
-var result = "";
-
-$(document).ready(function(){
-	$(".matchcheck").hide();
-	$(".match").hide();
-	$("#tryagain").hide();
-})
-
-$(".start").on('click', function(){
-	$(".landing").hide();
-	$(".matchcheck").show(); 
-
-})
-
-$("#submit").on('click',
-	function doIt(){		
-	
-	// Hiding the initial inputs div
-	$("#inputs").hide();
-
-	// Showing the results of the "match"
-	$("#outputs").show();
-
-	// Display the div holding the GIF
-	$(".match").show();
-
-	// Display a "Try Again?" div
-	$("#tryagain").show();
-
-	// Grabbing the values of user input
-	you=$("#you").val().trim();
-	them=$("#them").val().trim();
-
-	// The AJAX call for the Love Calculator API
-	var output = $.ajax({
-			// The URL to the Love Calculator API
-    		url: 'https://love-calculator.p.mashape.com/GetPercentage?fname='+you+'&sname='+them, 
-    		// The HTTP Method
-    		type: 'GET', 
-    		data: {}, 
-    		dataType: 'json',
-    	success: function(data) {
-
-        // console.log(data);
-        you = data.fname;
-        them = data.sname;
-        percentage = data.percentage;
-        result = data.result;
-
-        displayInfo();
-
-        gifUpload();
-        },
-    	error: function(err) { alert(err); },
-    	beforeSend: function(xhr) {
-    	// Adding the Mashape Key to enable API
-    	xhr.setRequestHeader("X-Mashape-Authorization", "ceDOtO1OMAmsh6wrcV74AgQJF5Unp1RjG22jsnf3TthWQqm6jM"); 
-    	}
-
-	});  
-});
-
-
-
-
-function gifUpload(){
-	
-	var query = "";
-
-	if(percentage>=80 && percentage<=100){
-		query = "celebrate"
-	}
-
-	if(percentage>=50 && percentage<=79){
-		query = "good+luck"
-	}
-
-	if(percentage>=30 && percentage<=49){
-		query = "eh"
-	}
-
-	if(percentage>=11 && percentage<=29){
-		query = "not+good"
-	}
-
-	if(percentage>=0 && percentage<=10){
-		query = "disaster"
-	}
-	
-
-	var queryURL = "http://api.giphy.com/v1/gifs/search?q="+ query + "&api_key=dc6zaTOxFJmzC&limit=1&offset=0";
-
-	// var which = Math.floor(Math.random()*(10-1)) + 1;
-
-	// AJAX call for the Giphy API
-	$.ajax({url: queryURL, method: 'GET'})
-
-		.done(function(response){
-
-			// console.log(response);
-
-			// console.log(response.data[0].images.downsized.url);
-			var gimme = response.data[0].images.downsized.url
-			$("#express").html("<img src=" + gimme + ">");
-		})
-}
-
-function displayInfo(){
-       	$('#percent').html("<h1>"+percentage + "% Match </h1>");
-	    $('#people').html(you+" & "+them);
-       	$('#result').html(result);  
-}
-
-</script>
 </body>
 </html>
